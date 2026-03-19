@@ -1,6 +1,7 @@
 const userModel = require("../models/user.model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const blacklistModel = require("../models/blacklist.model")
 
 const registerController = async(req,res) => {
 
@@ -26,7 +27,15 @@ const registerController = async(req,res) => {
         password: hashedPassword
     })
 
-    const token = jwt.sign({username, email}, process.env.JWT_SECRET, {expiresIn: "3d"})
+    const token = jwt.sign(
+        {
+            id: user._id,
+            username: user.username
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: "3d"
+        })
 
     res.cookie("user_token", token)
 
@@ -44,41 +53,77 @@ const loginController = async(req,res) => {
 
     const {username, email, password} = req.body
 
-    const isUserExist = await userModel.findOne({
+    const user = await userModel.findOne({
         $or:[
             {username},
             {email}
         ]
-    })
+    }).select("+password")
 
-    if(!isUserExist){
+    if(!user){
         return res.status(400).json({
             message: "Invalid Credentials"
         })
     }
 
-    const isPasswordValid = await bcrypt.compare(password, isUserExist.password)
+    const isPasswordValid = await bcrypt.compare(password, user.password)
     if(!isPasswordValid){
         return res.status(400).json({
             message: "Invalid Credentials"
         })
     }
 
-    const token = jwt.sign({username, email}, process.env.JWT_SECRET, {expiresIn:"3d"})
+    const token = jwt.sign(
+        {
+            id : user._id,
+            username: user.username
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn:"3d"
+        })
 
     res.cookie("user_token", token)
 
     return res.status(201).json({
         message: "Logged in Successfully",
         user: {
-            username,
-            email
+            id: user._id,
+            username: user.username,
+            email: user.email
         }
+    })
+}
+
+
+const getMe = async(req, res) => {
+    const userId = req.user.id
+
+    const user = await userModel.findById(userId)
+
+    return res.status(201).json({
+        message: "User fetched successfully",
+        user
+    })
+}
+
+
+const logoutController = (req, res) => {
+
+    token = req.cookies.user_token
+    
+    const blacklist_token = blacklistModel.create({token})
+    res.clearCookie("user_token")
+
+    return res.status(200).json({
+        message: "User Logged out successfully"
     })
 }
 
 
 module.exports = {
     registerController,
-    loginController
+    loginController,
+    getMe,
+    logoutController
 }
