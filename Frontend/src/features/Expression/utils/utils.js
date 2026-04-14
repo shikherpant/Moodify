@@ -67,11 +67,11 @@ import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 
     const browUp = get(blendshapes, "browInnerUp");
 
-    if (smile > 0.5) return "😊 Happy";
+    if (smile > 0.5) return "happy";
 
-    if (jawOpen > 0.5 && eyeWide > 0.3) return "😲 Surprised";
+    if (jawOpen > 0.5 && eyeWide > 0.3) return "surprised";
 
-    if (frown > 0.00009 && browUp > 0.0001) return "😢 Sad";
+    if (frown > 0.00009 && browUp > 0.0001) return "sad";
 
     return "😐 Neutral";
   };

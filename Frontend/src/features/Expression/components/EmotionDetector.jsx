@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { initMediaPipe, detectEmotion } from "../utils/utils";
 import "../Styles/style.scss"
 
-export default function EmotionDetector() {
+export default function EmotionDetector({songOnMood}) {
   const videoRef = useRef(null);
   const faceLandmarkerRef = useRef(null);
   const [emotion, setEmotion] = useState("Detecting...");
@@ -24,6 +24,7 @@ export default function EmotionDetector() {
         const blendshapes = results.faceBlendshapes[0].categories;
         const emotion = detectEmotion(blendshapes);
         setEmotion(emotion);
+        songOnMood(emotion);
       }
     }
   };

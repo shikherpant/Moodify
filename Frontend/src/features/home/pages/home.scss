@@ -1,0 +1,84 @@
+@use "../../shared/styles/global.scss";
+
+.home {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff8a00, #d84bff, #1cb5e0, #00c9a7, #ffd200);
+  background-size: 500% 500%;
+  animation: gradientShift 18s ease infinite;
+}
+
+.home__wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 20px 24px;
+  text-align: center;
+  min-height: calc(100vh - 110px);
+  overflow: hidden;
+}
+
+.home__header h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  color: #fff;
+  margin-bottom: 16px;
+  line-height: 1.05;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 40px rgba(255, 139, 0, 0.35), 0 0 80px rgba(33, 150, 243, 0.25);
+  animation: titleGlow 5s ease-in-out infinite;
+}
+
+.home__header p {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.95);
+  max-width: 640px;
+  margin: 0 auto 0px;
+}
+
+.home__detector {
+  width: 100%;
+  max-width: 960px;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  20% {
+    background-position: 25% 70%;
+  }
+  40% {
+    background-position: 50% 30%;
+  }
+  60% {
+    background-position: 75% 70%;
+  }
+  80% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.9), 0 0 40px rgba(255, 139, 0, 0.35), 0 0 80px rgba(33, 150, 243, 0.25);
+  }
+  50% {
+    text-shadow: 0 0 25px rgba(255, 255, 255, 1), 0 0 55px rgba(255, 87, 34, 0.5), 0 0 100px rgba(0, 188, 212, 0.35);
+  }
+}
+
+@media (max-width: 768px) {
+  .home__wrapper {
+    padding: 22px 16px 140px;
+  }
+  .home__header p {
+    margin-bottom: 28px;
+  }
+}
